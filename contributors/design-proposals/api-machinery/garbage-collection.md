@@ -196,7 +196,7 @@ This section presents an example of all components working together to enforce t
 10. The Garbage Processor of the GC dequeues `R1` from the *dirty queue*. It finds `R1` has an owner reference pointing to `D1`, and `D1` no longer exists, so it requests API server to delete `R1`, with `DeleteOptions.OrphanDependents=false`. (The Garbage Processor should always set this field to false.)
 11. The API server updates `R1` to remove the "orphan" finalizer if it's in the `R1`'s Finalizers map. Then the API server deletes `R1`, as `R1` has an empty Finalizers map.
 12. The Propagator of the GC observes the deletion of `R1`. It deletes `R1` from the DAG. It adds its dependent objects, Pods `P1`~`Pn`, to the *Dirty Queue*.
-13. The Garbage Processor of the GC dequeues `Px` (1 <= x <= n) from the *Dirty Queue*. It finds that `Px` have an owner reference pointing to `D1`, and `D1` no longer exists, so it requests API server to delete `Px`, with `DeleteOptions.OrphanDependents=false`.
+13. The Garbage Processor of the GC dequeues `Px` (1 <= x <= n) from the *Dirty Queue*. It finds that `Px` have an owner reference pointing to `R1`, and `R1` no longer exists, so it requests API server to delete `Px`, with `DeleteOptions.OrphanDependents=false`.
 14. API server deletes the Pods.
 
   ***In case the user wants to orphan `D1`'s descendants, then***
